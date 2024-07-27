@@ -67,8 +67,9 @@
             return button;
         }
 
-        function toggleFetchData(apiUrl, sensorName, button) {
+        async function toggleFetchData(apiUrl, sensorName, button) {
             if (button.innerText === 'Start') {
+                await refreshTokens();
                 button.innerText = 'Stop';
                 startFetching(apiUrl, sensorName);
             } else {
@@ -77,7 +78,7 @@
             }
         }
 
-        function startFetching(apiUrl, sensorName) {
+        async function startFetching(apiUrl, sensorName) {
             const fetchAndSendData = async () => {
                 await fetchData(apiUrl, sensorName);
                 await sendAllData(sensorName);
@@ -178,14 +179,58 @@
             }
         }
 
-        function startAll() {
-            document.querySelectorAll('.action-btn').forEach(button => {
-                if (button.innerText === 'Start') {
-                    button.click();
+        async function refreshTokens() {
+            try {
+                const localUsername = 'your-local-username';
+                const localPassword = 'your-local-password';
+                const cloudEmail = 'your-cloud-email@example.com';
+                const cloudPassword = 'your-cloud-password';
+                const userType = 'staff'; // Change as needed
+
+                // Get local token
+                const localResponse = await fetch('http://localhost:3002/api/auth/local-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: localUsername, password: localPassword })
+                });
+                const localData = await localResponse.json();
+                if (localData.localToken) {
+                    localStorage.setItem('localToken', localData.localToken);
+                } else {
+                    console.error('Failed to refresh local token');
                 }
+
+                // Get cloud token
+                const cloudResponse = await fetch('http://localhost:3002/api/auth/cloud-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: cloudEmail, password: cloudPassword, userType })
+                });
+                const cloudData = await cloudResponse.json();
+                if (cloudData.token) {
+                    localStorage.setItem('cloudToken', cloudData.token);
+                } else {
+                    console.error('Failed to refresh cloud token');
+                }
+            } catch (error) {
+                console.error('Error refreshing tokens:', error);
+            }
+        }
+
+        function startAll() {
+            refreshTokens().then(() => {
+                document.querySelectorAll('.action-btn').forEach(button => {
+                    if (button.innerText === 'Start') {
+                        button.click();
+                    }
+                });
+                document.getElementById('start-all-btn').disabled = true;
+                document.getElementById('stop-all-btn').disabled = false;
             });
-            document.getElementById('start-all-btn').disabled = true;
-            document.getElementById('stop-all-btn').disabled = false;
         }
 
         function stopAll() {
