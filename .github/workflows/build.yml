@@ -95,6 +95,11 @@ jobs:
           echo "C:\\GTK\\lib" >> $GITHUB_PATH
           echo "C:\\GTK\\include" >> $GITHUB_PATH
 
+      - name: Verify GTK installation
+        run: |
+          if (-Not (Test-Path -Path "C:\\GTK\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
+        shell: powershell
+
       - name: Install Node.js dependencies
         run: npm install
 
