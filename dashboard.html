@@ -181,14 +181,18 @@
 
         async function refreshTokens() {
             try {
-                const localUsername = 'your-local-username';
-                const localPassword = 'your-local-password';
-                const cloudEmail = 'your-cloud-email@example.com';
-                const cloudPassword = 'your-cloud-password';
-                const userType = 'staff'; // Change as needed
+                // Fetch local credentials from JSON
+                const configPath = await window.electron.getPath('userData');
+                const localServerConfigPath = window.electron.path.join(configPath, 'localServerConfig.json');
+                const localConfigData = window.electron.fs.readFileSync(localServerConfigPath, 'utf-8');
+                const localConfig = JSON.parse(localConfigData);
+
+                const localUsername = localConfig.username;
+                const localPassword = localConfig.password;
+                const localServerUrl = localConfig.serverUrl;
 
                 // Get local token
-                const localResponse = await fetch('http://localhost:3002/api/auth/local-login', {
+                const localResponse = await fetch(localServerUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -196,14 +200,33 @@
                     body: JSON.stringify({ username: localUsername, password: localPassword })
                 });
                 const localData = await localResponse.json();
-                if (localData.localToken) {
-                    localStorage.setItem('localToken', localData.localToken);
+                if (localData.token) {
+                    localStorage.setItem('localToken', localData.token);
                 } else {
                     console.error('Failed to refresh local token');
                 }
 
+                // Fetch cloud credentials from JSON
+                const cloudServerConfigPath = window.electron.path.join(configPath, 'cloudServerConfig.json');
+                const cloudConfigData = window.electron.fs.readFileSync(cloudServerConfigPath, 'utf-8');
+                const cloudConfig = JSON.parse(cloudConfigData);
+
+                const cloudEmail = cloudConfig.email;
+                const cloudPassword = cloudConfig.password;
+                const userType = cloudConfig.userType;
+                
+                let endpoint = '';
+                if (userType === 'staff') {
+                    endpoint = 'https://ec2-3-109-41-79.ap-south-1.compute.amazonaws.com/api/backdoor-token';
+                } else if (userType === 'client') {
+                    endpoint = 'https://ec2-3-109-41-79.ap-south-1.compute.amazonaws.com/api/backdoor-client-token';
+                } else {
+                    console.error('Invalid user type');
+                    return;
+                }
+
                 // Get cloud token
-                const cloudResponse = await fetch('http://localhost:3002/api/auth/cloud-login', {
+                const cloudResponse = await fetch(endpoint, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -211,8 +234,8 @@
                     body: JSON.stringify({ email: cloudEmail, password: cloudPassword, userType })
                 });
                 const cloudData = await cloudResponse.json();
-                if (cloudData.token) {
-                    localStorage.setItem('cloudToken', cloudData.token);
+                if (cloudData.access_token) {
+                    localStorage.setItem('cloudToken', cloudData.access_token);
                 } else {
                     console.error('Failed to refresh cloud token');
                 }
