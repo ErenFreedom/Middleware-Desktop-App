@@ -60,9 +60,18 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install GTK dependencies
+        run: choco install gtk-runtime
+        shell: cmd
+
+      - name: Check for existing Python installation
         run: |
-          choco install gtk-runtime
-          choco install python --version=3.8.0
+          if (Get-Command python -ErrorAction SilentlyContinue) { Write-Output "Python is already installed"; exit 0 } else { exit 1 }
+        shell: powershell
+        continue-on-error: true
+
+      - name: Install Python if not already installed
+        if: failure()
+        run: choco install python --version=3.8.0
         shell: cmd
 
       - name: Install MSYS2 for additional dependencies
