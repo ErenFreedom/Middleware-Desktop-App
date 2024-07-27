@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server - Configure Cloud Server</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/configure-cloud.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Please Configure your Cloud Server</h2>
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="client">Client</option>
+                <option value="staff">Staff</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="footer">
+            <button onclick="navigateBack()">Back</button>
+            <button onclick="checkConnection()">Check Connection</button>
+            <button id="review-button" disabled>Review</button>
+        </div>
+    </div>
+    <script>
+        async function checkConnection() {
+            const role = document.getElementById('role').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const apis = JSON.parse(localStorage.getItem('apis') || '[]');
+
+            try {
+                const response = await fetch('https://ec2-3-109-41-79.ap-south-1.compute.amazonaws.com/api/check-account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ role, email, password, apis })
+                });
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (response.ok) {
+                    alert('Connection successful!');
+                    document.getElementById('review-button').disabled = false;
+
+                    const configData = { role, email, password, schemaName: data.schemaName };
+                    await saveToJsonFile('cloudServerConfig.json', configData);
+
+                    window.localStorage.setItem('cloudRole', role);
+                    window.localStorage.setItem('cloudEmail', email);
+                    window.localStorage.setItem('cloudPassword', password);
+                    window.localStorage.setItem('roleType', data.user.role); // Ensure roleType is stored
+                    window.localStorage.setItem('cloudToken', data.token); // Ensure the token is stored
+                    window.localStorage.setItem('schemaName', data.schemaName); // Store the schema name
+                } else {
+                    alert('Connection failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Connection failed. Please check your credentials.');
+            }
+        }
+
+        async function saveToJsonFile(filename, data) {
+            const userDataPath = await window.electron.getPath('userData');
+            const configPath = window.electron.path.join(userDataPath, filename);
+
+            // Ensure the directory exists
+            if (!window.electron.fs.existsSync(userDataPath)) {
+                window.electron.fs.mkdirSync(userDataPath, { recursive: true });
+            }
+
+            window.electron.fs.writeFileSync(configPath, JSON.stringify(data, null, 2), 'utf-8');
+            console.log(`Saved cloud configuration to ${configPath}`);
+        }
+
+        function navigateBack() {
+            window.location.href = 'configure-sensors.html';
+        }
+
+        document.getElementById('review-button').addEventListener('click', () => {
+            if (!document.getElementById('review-button').disabled) {
+                window.location.href = 'review.html';
+            }
+        });
+    </script>
+</body>
+</html>

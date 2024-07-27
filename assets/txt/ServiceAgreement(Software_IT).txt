@@ -1,0 +1,230 @@
+COMPUTER SERVICES AGREEMENT
+THIS COMPUTER SERVICES AGREEMENT (the "Agreement") is dated this ________ day of
+________________, ________.
+CLIENT
+
+CONTRACTOR
+
+Koncept Engineers
+
+Koncept Engineers
+
+114 ,Vardhman Star Mall, Sector 19,
+Faridabad, Haryana 121002
+
+114 ,Vardhman Star Mall, Sector 19,
+Faridabad, Haryana 121002
+
+(the "Client")
+
+(the "Contractor")
+
+BACKGROUND
+A. The Client is of the opinion that the Contractor has the necessary qualifications, experience
+and abilities to provide computer services to the Client.
+B. The Contractor is agreeable to providing such computer services to the Client on the terms
+and conditions set out in this Agreement.
+
+IN CONSIDERATION OF the matters described above and of the mutual benefits and obligations
+set forth in this Agreement, the receipt and sufficiency of which consideration is hereby
+acknowledged, the Client and the Contractor (individually the "Party" and collectively the "Parties"
+to this Agreement) agree as follows:
+SERVICES PROVIDED
+1. The Client hereby agrees to engage the Contractor to provide the Client with the following
+computer services (the "Services"):
+• The Contractor is being hired to develop, deliver, and maintain a comprehensive
+desktop software application designed for HVAC systems. This application will
+monitor environmental data from an indefinite number of sensors, including but not
+limited to temperature, humidity, and pressure sensors. The software will provide
+real-time data logging and monitoring capabilities, ensuring accurate and timely
+information. Additionally, it will generate detailed analytical reports to support
+decision-making and regulatory compliance. The application will also facilitate client
+queries, enabling users to raise inquiries and issues directly to support staff for
+prompt resolution. The Contractor will provide installation support, regular updates,
+and ongoing maintenance services to ensure the software remains fully operational,
+secure, and up-to-date with the latest features and technological advancements..
+2. The Services will also include any other computer tasks which the Parties may agree on. The
+Contractor hereby agrees to provide such Services to the Client.
+
+Page 1 of 6
+
+Service Agreement (Software/IT)
+
+Page 2 of 6
+
+TERM OF AGREEMENT
+3. The term of this Agreement (the "Term") will begin on the date of this Agreement and will
+remain in full force and effect indefinitely until terminated as provided in this Agreement.
+4. In the event that either Party wishes to terminate this Agreement, that Party will be required
+to provide 30 days' written notice to the other Party.
+5. In the event that either Party breaches a material provision under this Agreement, the nondefaulting Party may terminate this Agreement immediately and require the defaulting Party
+to indemnify the non-defaulting Party against all reasonable damages.
+6. This Agreement may be terminated at any time by mutual agreement of the Parties.
+7. Except as otherwise provided in this Agreement, the obligations of the Contractor will end
+upon the termination of this Agreement.
+PERFORMANCE
+8. The Parties agree to do everything necessary to ensure that the terms of this Agreement take
+effect.
+CURRENCY
+9. Except as otherwise provided in this Agreement, all monetary amounts referred to in this
+Agreement are in INR (Indian Rupees).
+PAYMENT
+10. The Contractor will charge the Client for the Services at the rate of ₹0.00 per hour (the
+"Payment").
+11. The Client will be invoiced every month.
+12. Invoices submitted by the Contractor to the Client are due within seven days of receipt.
+13. The Payment as stated in this Agreement does not include sales tax, or other applicable
+duties as may be required by law. Any sales tax and duties required by law will be charged to
+the Client in addition to the Payment.
+REIMBURSEMENT OF EXPENSES
+14. The Contractor will be reimbursed from time to time for reasonable and necessary expenses
+incurred by the Contractor in connection with providing the Services. The Contractor will only
+be reimbursed for expenses submitted according to the following guidelines:
+• ______________________________________________________________________
+______________________________________________________________________.
+INTEREST ON LATE PAYMENTS
+
+Service Agreement (Software/IT)
+
+Page 3 of 6
+
+15. Interest payable on any overdue amounts under this Agreement is charged at a rate of
+18.00% per annum or at the maximum rate enforceable under applicable legislation,
+whichever is lower.
+CONFIDENTIALITY
+16. Confidential information (the "Confidential Information") refers to any data or information
+relating to the business of the Client which would reasonably be considered to be proprietary
+to the Client including, but not limited to, accounting records, business processes, and client
+records and that is not generally known in the industry of the Client and where the release of
+that Confidential Information could reasonably be expected to cause harm to the Client.
+17. The Contractor agrees that they will not disclose, divulge, reveal, report or use, for any
+purpose, any Confidential Information which the Contractor has obtained, except as
+authorised by the Client or as required by law. The obligations of confidentiality will apply
+during the Term and will survive indefinitely upon termination of this Agreement.
+18. All written and oral information and material disclosed or provided by the Client to the
+Contractor under this Agreement is Confidential Information regardless of whether it was
+provided before or after the date of this Agreement or how it was provided to the Contractor.
+OWNERSHIP OF INTELLECTUAL PROPERTY
+19. All intellectual property and related material (the "Intellectual Property") that is developed or
+produced under this Agreement, will be the property of the Contractor. The Client is granted a
+non-exclusive limited-use licence of this Intellectual Property. Any software produced during
+the course of this Agreement may not be modified, reverse-engineered, or de-compiled in
+any manner through current or future available technologies.
+20. Title, copyright, intellectual property rights and distribution rights of the Intellectual Property
+remain exclusively with the Contractor. Intellectual property rights include the look and feel of
+any software produced.
+RETURN OF PROPERTY
+21. Upon the expiry or termination of this Agreement, the Contractor will return to the Client any
+property, documentation, records, or Confidential Information which is the property of the
+Client.
+CAPACITY/INDEPENDENT CONTRACTOR
+22. In providing the Services under this Agreement it is expressly agreed that the Contractor is
+acting as an independent contractor and not as an employee. The Contractor and the Client
+acknowledge that this Agreement does not create a partnership or joint venture between
+them, and is exclusively a contract for service.
+RIGHT OF SUBSTITUTION
+23. Except as otherwise provided in this Agreement, the Contractor may, at the Contractor's
+absolute discretion, engage a third party sub-contractor to perform some or all of the
+
+Service Agreement (Software/IT)
+
+Page 4 of 6
+
+obligations of the Contractor under this Agreement and the Client will not hire or engage any
+third parties to assist with the provision of the Services.
+24. In the event that the Contractor hires a sub-contractor:
+• the Contractor will pay the sub-contractor for its services and the Compensation will
+remain payable by the Client to the Contractor.
+• for the purposes of the indemnification clause of this Agreement, the sub-contractor
+is an agent of the Contractor.
+AUTONOMY
+25. Except as otherwise provided in this Agreement, the Contractor will have full control over
+working time, methods, and decision making in relation to provision of the Services in
+accordance with the Agreement. The Contractor will work autonomously and not at the
+direction of the Client. However, the Contractor will be responsive to the reasonable needs
+and concerns of the Client.
+EQUIPMENT
+26. Except as otherwise provided in this Agreement, the Contractor will provide at the
+Contractor’s own expense, any and all tools, equipment, cabling, software, replacement
+parts, supplies and any other items or parts necessary to deliver the Services in accordance
+with the Agreement.
+NO EXCLUSIVITY
+27. The Parties acknowledge that this Agreement is non-exclusive and that either Party will be
+free, during and after the Term, to engage or contract with third parties for the provision of
+services similar to the Services.
+NOTICE
+28. All notices, requests, demands or other communications required or permitted by the terms of
+this Agreement will be given in writing and delivered to the Parties at the following addresses:
+a. Koncept Engineers
+114 ,Vardhman Star Mall, Sector 19, Faridabad, Haryana 121002
+b. Koncept Engineers
+114 ,Vardhman Star Mall, Sector 19, Faridabad, Haryana 121002
+or to such other address as either Party may from time to time notify the other.
+INDEMNIFICATION
+29. Except to the extent paid in settlement from any applicable insurance policies, and to the
+extent permitted by applicable law, each Party agrees to indemnify and hold harmless the
+other Party, and its respective directors, shareholders, affiliates, officers, agents, employees,
+
+Service Agreement (Software/IT)
+
+Page 5 of 6
+
+and permitted successors and assigns against any and all claims, losses, damages,
+liabilities, penalties, punitive damages, expenses, reasonable legal fees and costs of any kind
+or amount whatsoever, which result from or arise out of any act or omission of the
+indemnifying party, its respective directors, shareholders, affiliates, officers, agents,
+employees, and permitted successors and assigns that occurs in connection with this
+Agreement. This indemnification will survive the termination of this Agreement.
+MODIFICATION OF AGREEMENT
+30. Any amendment or modification of this Agreement or additional obligation assumed by either
+Party in connection with this Agreement will only be binding if evidenced in writing signed by
+each Party or an authorised representative of each Party.
+TIME OF THE ESSENCE
+31. Time is of the essence in this Agreement. No extension or variation of this Agreement will
+operate as a waiver of this provision.
+ASSIGNMENT
+32. The Contractor will not voluntarily, or by operation of law, assign or otherwise transfer its
+obligations under this Agreement without the prior written consent of the Client.
+ENTIRE AGREEMENT
+33. It is agreed that there is no representation, warranty, collateral agreement or condition
+affecting this Agreement except as expressly provided in this Agreement.
+ENUREMENT
+34. This Agreement will enure to the benefit of and be binding on the Parties and their respective
+heirs, executors, administrators and permitted successors and assigns.
+TITLES/HEADINGS
+35. Headings are inserted for the convenience of the Parties only and are not to be considered
+when interpreting this Agreement.
+GENDER
+36. Words in the singular mean and include the plural and vice versa. Words in the masculine
+mean and include the feminine and vice versa.
+GOVERNING LAW
+37. This Agreement will be governed by and construed in accordance with the laws of the
+National Capital Territory of Delhi.
+SEVERABILITY
+38. In the event that any of the provisions of this Agreement are held to be invalid or
+
+Service Agreement (Software/IT)
+
+Page 6 of 6
+
+unenforceable in whole or in part, all other provisions will nevertheless continue to be valid
+and enforceable with the invalid or unenforceable parts severed from the remainder of this
+Agreement.
+WAIVER
+39. The waiver by either Party of a breach, default, delay or omission of any of the provisions of
+this Agreement by the other Party will not be construed as a waiver of any subsequent
+breach of the same or other provisions.
+
+IN WITNESS WHEREOF the Parties have duly affixed their signatures under hand and seal on
+this ________ day of ________________, ________.
+
+Koncept Engineers
+Per: ____________________________ (Seal)
+Officer's Name: __________________________
+Koncept Engineers
+Per: ____________________________ (Seal)
+Officer's Name: __________________________
+
+©2002-2024 LawDepot.com®
+
+

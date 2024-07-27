@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server - License Agreement</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/license.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <h2>Service Agreement</h2>
+            <div id="text-viewer" class="license-content"></div>
+        </div>
+        <div class="right-section">
+            <label>
+                <input type="checkbox" id="agree-checkbox" />
+                I accept the terms and conditions
+            </label>
+            <div class="footer">
+                <button onclick="navigateBack()">Back</button>
+                <button id="next-button" class="disabled" onclick="navigateNext()" disabled>Next</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('agree-checkbox').addEventListener('change', function() {
+            const nextButton = document.getElementById('next-button');
+            nextButton.disabled = !this.checked;
+            nextButton.classList.toggle('disabled', !this.checked);
+        });
+
+        function navigateBack() {
+            window.location.href = 'index.html';
+        }
+
+        function navigateNext() {
+            const agreeCheckbox = document.getElementById('agree-checkbox');
+            if (agreeCheckbox.checked) {
+                window.location.href = 'configure.html'; // Navigate to the configure page
+            } else {
+                alert('You must accept the terms and conditions to proceed.');
+            }
+        }
+
+        window.electron.loadLicenseText().then((text) => {
+            document.getElementById('text-viewer').innerText = text;
+        });
+    </script>
+</body>
+</html>

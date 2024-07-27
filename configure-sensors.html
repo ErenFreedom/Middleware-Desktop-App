@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server - Configure Sensors</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/configure-sensors.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Please Configure your sensors</h2>
+        <p>Insert your REST APIs in the tags given below. Click on the plus button to create as many tags as you want.</p>
+        <div id="tags-container" class="tags-container">
+            <div class="tag-group">
+                <label for="tag1">Tag 1:</label>
+                <input type="text" id="tag1" class="tag-input" placeholder="Placeholder" oninput="validateAPIs()">
+                <button class="remove-btn" onclick="removeTag(this)">Remove</button>
+                <p class="error-message" style="color: red; display: none;">Duplicate API detected</p>
+            </div>
+            <div class="tag-group">
+                <label for="tag2">Tag 2:</label>
+                <input type="text" id="tag2" class="tag-input" placeholder="Placeholder" oninput="validateAPIs()">
+                <button class="remove-btn" onclick="removeTag(this)">Remove</button>
+                <p class="error-message" style="color: red; display: none;">Duplicate API detected</p>
+            </div>
+            <div class="tag-group">
+                <label for="tag3">Tag 3:</label>
+                <input type="text" id="tag3" class="tag-input" placeholder="Placeholder" oninput="validateAPIs()">
+                <button class="remove-btn" onclick="removeTag(this)">Remove</button>
+                <p class="error-message" style="color: red; display: none;">Duplicate API detected</p>
+            </div>
+            <div class="tag-group">
+                <label for="tag4">Tag 4:</label>
+                <input type="text" id="tag4" class="tag-input" placeholder="Placeholder" oninput="validateAPIs()">
+                <button class="remove-btn" onclick="removeTag(this)">Remove</button>
+                <p class="error-message" style="color: red; display: none;">Duplicate API detected</p>
+            </div>
+            <div class="tag-group">
+                <label for="tag5">Tag 5:</label>
+                <input type="text" id="tag5" class="tag-input" placeholder="Placeholder" oninput="validateAPIs()">
+                <button class="remove-btn" onclick="removeTag(this)">Remove</button>
+                <p class="error-message" style="color: red; display: none;">Duplicate API detected</p>
+            </div>
+            <div class="tag-group">
+                <label for="tag6">Tag 6:</label>
+                <input type="text" id="tag6" class="tag-input" placeholder="Placeholder" oninput="validateAPIs()">
+                <button class="remove-btn" onclick="removeTag(this)">Remove</button>
+                <p class="error-message" style="color: red; display: none;">Duplicate API detected</p>
+            </div>
+        </div>
+        <button id="add-tag-btn" onclick="addTag()">+ Add Tag</button>
+        <div class="footer">
+            <button onclick="navigateBack()">Back</button>
+            <button id="verify-button" onclick="verifyConnections()" disabled>Verify API Connections</button>
+            <button id="review-button" disabled>Next</button>
+        </div>
+    </div>
+    <script>
+        const { ipcRenderer } = window.electron;
+
+        let tagCount = 6;
+
+        function addTag() {
+            tagCount++;
+            const tagsContainer = document.getElementById('tags-container');
+            const newTag = document.createElement('div');
+            newTag.className = 'tag-group';
+            newTag.innerHTML = `
+                <label for="tag${tagCount}">Tag ${tagCount}:</label>
+                <input type="text" id="tag${tagCount}" class="tag-input" placeholder="Placeholder" oninput="validateAPIs()">
+                <button class="remove-btn" onclick="removeTag(this)">Remove</button>
+                <p class="error-message" style="color: red; display: none;">Duplicate API detected</p>
+            `;
+            tagsContainer.appendChild(newTag);
+        }
+
+        function removeTag(button) {
+            const tagGroup = button.parentElement;
+            tagGroup.remove();
+            validateAPIs();
+        }
+
+        function validateAPIs() {
+            const tagInputs = document.querySelectorAll('.tag-input');
+            const apiSet = new Set();
+            let hasDuplicates = false;
+
+            tagInputs.forEach(input => {
+                const apiUrl = input.value.trim();
+                const errorMessage = input.nextElementSibling.nextElementSibling;
+                if (apiSet.has(apiUrl) && apiUrl !== '') {
+                    errorMessage.style.display = 'block';
+                    hasDuplicates = true;
+                } else {
+                    errorMessage.style.display = 'none';
+                    apiSet.add(apiUrl);
+                }
+            });
+
+            document.getElementById('verify-button').disabled = hasDuplicates;
+        }
+
+        async function verifyConnections() {
+            const tagInputs = document.querySelectorAll('.tag-input');
+            let allVerified = true;
+            let apis = [];
+            let uniqueApis = new Set();
+
+            for (const input of tagInputs) {
+                const apiUrl = input.value.trim();
+                const errorMessage = input.nextElementSibling.nextElementSibling;
+
+                if (apiUrl) {
+                    if (uniqueApis.has(apiUrl)) {
+                        allVerified = false;
+                        errorMessage.style.display = 'block';
+                        continue;
+                    } else {
+                        errorMessage.style.display = 'none';
+                        uniqueApis.add(apiUrl);
+                    }
+
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${window.localStorage.getItem('jwtToken')}`
+                            }
+                        });
+                        if (!response.ok) {
+                            allVerified = false;
+                            alert(`Connection failed for ${input.id}: ${apiUrl}`);
+                        } else {
+                            apis.push(apiUrl);
+                        }
+                    } catch (error) {
+                        allVerified = false;
+                        alert(`Connection failed for ${input.id}: ${apiUrl}`);
+                    }
+                }
+            }
+
+            if (allVerified) {
+                alert('All connections verified successfully!');
+                document.getElementById('review-button').disabled = false;
+
+                const configData = { apis };
+                console.log(`Saving the following APIs to sensorApis.json:`, configData);
+                await saveToJsonFile('sensorApis.json', configData);
+
+                localStorage.setItem('apis', JSON.stringify(apis));
+            } else {
+                alert('One or more connections failed. Please check the API endpoints.');
+            }
+        }
+
+        async function saveToJsonFile(filename, data) {
+            const userDataPath = await window.electron.getPath('userData');
+            const configPath = window.electron.path.join(userDataPath, filename);
+
+            // Ensure the directory exists
+            if (!window.electron.fs.existsSync(userDataPath)) {
+                window.electron.fs.mkdirSync(userDataPath, { recursive: true });
+            }
+
+            window.electron.fs.writeFileSync(configPath, JSON.stringify(data, null, 2), 'utf-8');
+            console.log(`Saved APIs to ${configPath}`);
+        }
+
+        function navigateBack() {
+            window.location.href = 'configure.html';
+        }
+
+        document.getElementById('review-button').addEventListener('click', () => {
+            if (!document.getElementById('review-button').disabled) {
+                window.location.href = 'configure-cloud.html';
+            }
+        });
+    </script>
+</body>
+</html>

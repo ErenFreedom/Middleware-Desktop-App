@@ -1,0 +1,78 @@
+{
+  "name": "middleware-app",
+  "version": "1.0.0",
+  "description": "Middleware App with Electron and Node.js",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "keywords": [
+    "middleware",
+    "electron",
+    "nodejs",
+    "app"
+  ],
+  "author": {
+    "name": "Kartik",
+    "email": "freedomyeager12@gmail.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "pdfjs-dist": "^4.4.168",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "electron": "^25.3.1",
+    "electron-builder": "^23.6.0"
+  },
+  "build": {
+    "appId": "com.example.middlewareapp",
+    "productName": "MiddlewareApp",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "main.js",
+      "preload.js",
+      "backend/**/*",
+      "assets/**/*",
+      "index.html",
+      "license.html",
+      "configure.html",
+      "configure-sensors.html",
+      "configure-cloud.html",
+      "review.html",
+      "login-localserver.html",
+      "login-cloud.html",
+      "nameSensors.html",
+      "dashboard.html"
+    ],
+    "directories": {
+      "output": "build"
+    },
+    "extraResources": {
+      "from": "./backend",
+      "to": "backend"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Development",
+      "maintainer": "Kartik <freedomyeager12@gmail.com>"
+    }
+  }
+}

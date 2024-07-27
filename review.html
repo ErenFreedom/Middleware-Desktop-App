@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server - Review Configuration</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/review.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Review Configuration</h2>
+        <div class="review-section">
+            <h3>Login Information</h3>
+            <p>Username: <span id="username-review"></span></p>
+            <p>Password: <span id="password-review">********</span> <button onclick="togglePassword()">Show</button></p>
+        </div>
+        <div class="review-section">
+            <h3>Configured APIs</h3>
+            <ul id="api-list"></ul>
+        </div>
+        <div class="footer">
+            <button onclick="navigateBack()">Back</button>
+            <button id="finish-button">Finish</button>
+        </div>
+    </div>
+    <script>
+        function navigateBack() {
+            window.location.href = 'configure-sensors.html';
+        }
+
+        function togglePassword() {
+            const passwordElement = document.getElementById('password-review');
+            const button = document.querySelector('.review-section button');
+            if (passwordElement.textContent === '********') {
+                passwordElement.textContent = localStorage.getItem('password');
+                button.textContent = 'Hide';
+            } else {
+                passwordElement.textContent = '********';
+                button.textContent = 'Show';
+            }
+        }
+
+        async function finishSetup() {
+            console.log('Finish button clicked');
+            try {
+                await window.electron.finishSetup();
+                console.log('Setup complete, navigating to login-localserver.html');
+                window.location.href = 'login-localserver.html';
+            } catch (error) {
+                console.error('Error finishing setup:', error);
+                alert('Failed to finish setup. Please try again.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('username-review').textContent = localStorage.getItem('username');
+            const apis = JSON.parse(localStorage.getItem('apis') || '[]');
+            const apiList = document.getElementById('api-list');
+            apis.forEach(api => {
+                const listItem = document.createElement('li');
+                listItem.textContent = api;
+                apiList.appendChild(listItem);
+            });
+
+            document.getElementById('finish-button').addEventListener('click', finishSetup);
+        });
+    </script>
+</body>
+</html>

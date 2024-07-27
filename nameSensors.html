@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server - Name Sensors</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/nameSensors.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Configure Sensor Names</h2>
+        <div id="sensor-name-form" class="sensor-name-form"></div>
+        <div id="warning" class="warning" style="display: none; color: red;"></div>
+        <button id="save-names-btn" onclick="saveNames()">Save Names</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const sensorNameForm = document.getElementById('sensor-name-form');
+
+            try {
+                const configPath = await window.electron.getPath('userData');
+                const sensorApisPath = window.electron.path.join(configPath, 'sensorApis.json');
+                const configData = window.electron.fs.readFileSync(sensorApisPath, 'utf-8');
+                const { apis } = JSON.parse(configData);
+
+                apis.forEach((api, index) => {
+                    const sensorNameDiv = document.createElement('div');
+                    sensorNameDiv.className = 'sensor-name-item';
+
+                    const apiLabel = document.createElement('label');
+                    apiLabel.innerText = api;
+                    sensorNameDiv.appendChild(apiLabel);
+
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.placeholder = 'Enter unique name';
+                    nameInput.id = `sensor-name-${index}`;
+                    sensorNameDiv.appendChild(nameInput);
+
+                    sensorNameForm.appendChild(sensorNameDiv);
+                });
+            } catch (error) {
+                console.error('Error loading sensor APIs:', error);
+                document.getElementById('warning').innerText = 'Error loading sensor APIs.';
+                document.getElementById('warning').style.display = 'block';
+            }
+        });
+
+        async function saveNames() {
+            const configPath = await window.electron.getPath('userData');
+            const sensorApisPath = window.electron.path.join(configPath, 'sensorApis.json');
+            const apisData = window.electron.fs.readFileSync(sensorApisPath, 'utf-8');
+            const { apis } = JSON.parse(apisData);
+
+            const sensorNames = [];
+            const namesSet = new Set();
+            let duplicateFound = false;
+            let duplicateName = '';
+
+            apis.forEach((api, index) => {
+                const nameInput = document.getElementById(`sensor-name-${index}`);
+                const sensorName = nameInput.value.trim();
+
+                if (namesSet.has(sensorName)) {
+                    duplicateFound = true;
+                    duplicateName = sensorName;
+                } else {
+                    namesSet.add(sensorName);
+                    sensorNames.push({
+                        api,
+                        name: sensorName || `default-${index}` // Default to a unique name if empty
+                    });
+                }
+            });
+
+            if (duplicateFound) {
+                document.getElementById('warning').innerText = `Duplicate name found: ${duplicateName}`;
+                document.getElementById('warning').style.display = 'block';
+            } else {
+                document.getElementById('warning').style.display = 'none';
+
+                try {
+                    const sensorNamesPath = window.electron.path.join(configPath, 'sensorNames.json');
+                    window.electron.fs.writeFileSync(sensorNamesPath, JSON.stringify(sensorNames, null, 2), 'utf-8');
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('warning').innerText = 'Error saving sensor names.';
+                    document.getElementById('warning').style.display = 'block';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

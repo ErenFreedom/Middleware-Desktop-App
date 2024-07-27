@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server - Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Dashboard Page</h2>
+        <div id="sensor-boxes" class="sensor-boxes"></div>
+        <div class="footer">
+            <button id="start-all-btn" onclick="startAll()">Start All</button>
+            <button id="stop-all-btn" onclick="stopAll()" disabled>Stop All</button>
+        </div>
+        <div id="status-boxes" class="status-boxes"></div>
+    </div>
+    <script>
+        const intervals = {};
+        const timers = {};
+        const statusBoxes = {};
+
+        async function fetchSensorNames() {
+            try {
+                const configPath = await window.electron.getPath('userData');
+                const sensorNamesPath = window.electron.path.join(configPath, 'sensorNames.json');
+                const configData = window.electron.fs.readFileSync(sensorNamesPath, 'utf-8');
+                return JSON.parse(configData);
+            } catch (error) {
+                console.error('Error fetching sensor names:', error);
+                return [];
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const sensorBoxContainer = document.getElementById('sensor-boxes');
+            const sensorNames = await fetchSensorNames();
+
+            sensorNames.forEach(sensor => {
+                const sensorBox = document.createElement('div');
+                sensorBox.className = 'sensor-box';
+
+                const sensorNameDiv = document.createElement('div');
+                sensorNameDiv.innerText = sensor.name;
+                sensorBox.appendChild(sensorNameDiv);
+
+                const startButton = createButton('Start', () => toggleFetchData(sensor.api, sensor.name, startButton));
+                sensorBox.appendChild(startButton);
+
+                sensorBoxContainer.appendChild(sensorBox);
+
+                // Create status box
+                const statusBox = document.createElement('div');
+                statusBox.className = 'status-box';
+                statusBox.id = `status-box-${sensor.api}`;
+                statusBox.innerText = `Ready to fetch data from ${sensor.name}`;
+                document.getElementById('status-boxes').appendChild(statusBox);
+                statusBoxes[sensor.api] = statusBox;
+            });
+        });
+
+        function createButton(text, onClick) {
+            const button = document.createElement('button');
+            button.innerText = text;
+            button.className = 'action-btn';
+            button.onclick = onClick;
+            return button;
+        }
+
+        function toggleFetchData(apiUrl, sensorName, button) {
+            if (button.innerText === 'Start') {
+                button.innerText = 'Stop';
+                startFetching(apiUrl, sensorName);
+            } else {
+                button.innerText = 'Start';
+                stopFetching(apiUrl, sensorName);
+            }
+        }
+
+        function startFetching(apiUrl, sensorName) {
+            const fetchAndSendData = async () => {
+                await fetchData(apiUrl, sensorName);
+                await sendAllData(sensorName);
+            };
+            fetchAndSendData(); // Fetch and send immediately on start
+            intervals[apiUrl] = setInterval(fetchAndSendData, 30000);
+            startTimer(apiUrl, sensorName);
+        }
+
+        function stopFetching(apiUrl, sensorName) {
+            clearInterval(intervals[apiUrl]);
+            clearInterval(timers[apiUrl]);
+            delete intervals[apiUrl];
+            delete timers[apiUrl];
+            statusBoxes[apiUrl].innerText = `Stopped fetching data from ${sensorName}`;
+        }
+
+        function startTimer(apiUrl, sensorName) {
+            let timeLeft = 30;
+            statusBoxes[apiUrl].innerText = `Fetching data in ${timeLeft} seconds`;
+            timers[apiUrl] = setInterval(() => {
+                timeLeft -= 1;
+                if (timeLeft >= 0) {
+                    statusBoxes[apiUrl].innerText = `Fetching data in ${timeLeft} seconds`;
+                } else {
+                    statusBoxes[apiUrl].innerText = `Sending data to cloud...`;
+                    clearInterval(timers[apiUrl]);
+                    setTimeout(() => {
+                        statusBoxes[apiUrl].innerText = `Data successfully sent to cloud`;
+                        setTimeout(() => {
+                            startTimer(apiUrl, sensorName); // Restart the timer after showing success message
+                        }, 5000); // Display success message for 5 seconds
+                    }, 1000);
+                }
+            }, 1000);
+        }
+
+        async function fetchData(apiUrl, sensorName) {
+            const token = localStorage.getItem('localToken'); // Use local token for fetching
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                console.log(`Fetched data from ${sensorName}:`, data);
+
+                // Store fetched data in local storage
+                let fetchedData = JSON.parse(localStorage.getItem('fetchedData') || '[]');
+                data.sensor_name = sensorName; // Include sensor name in the fetched data
+                fetchedData.push(data);
+                localStorage.setItem('fetchedData', JSON.stringify(fetchedData));
+            } catch (error) {
+                console.error(`Error fetching data from ${sensorName}:`, error);
+            }
+        }
+
+        async function sendAllData(sensorName) {
+            const token = localStorage.getItem('cloudToken'); // Use cloud token for sending
+            const email = localStorage.getItem('cloudEmail');
+            const roleType = localStorage.getItem('roleType');
+            const schemaName = localStorage.getItem('schemaName'); // Read schema name from local storage
+            const fetchedData = JSON.parse(localStorage.getItem('fetchedData') || '[]');
+
+            if (fetchedData.length === 0) {
+                console.log('No data to send.');
+                return;
+            }
+
+            // Update the sensor_api field with the sensor name
+            const updatedFetchedData = fetchedData.map(data => ({
+                ...data,
+                sensor_api: sensorName
+            }));
+
+            try {
+                const response = await fetch('https://ec2-3-109-41-79.ap-south-1.compute.amazonaws.com/api/add-sensor-data', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, roleType, sensorData: updatedFetchedData, schemaName })
+                });
+
+                const data = await response.json();
+                console.log(`Sent data to cloud:`, data);
+
+                // Clear fetched data after sending
+                localStorage.setItem('fetchedData', '[]');
+            } catch (error) {
+                console.error(`Error sending data to cloud:`, error);
+            }
+        }
+
+        function startAll() {
+            document.querySelectorAll('.action-btn').forEach(button => {
+                if (button.innerText === 'Start') {
+                    button.click();
+                }
+            });
+            document.getElementById('start-all-btn').disabled = true;
+            document.getElementById('stop-all-btn').disabled = false;
+        }
+
+        function stopAll() {
+            document.querySelectorAll('.action-btn').forEach(button => {
+                if (button.innerText === 'Stop') {
+                    button.click();
+                }
+            });
+            document.getElementById('start-all-btn').disabled = false;
+            document.getElementById('stop-all-btn').disabled = true;
+        }
+    </script>
+</body>
+</html>

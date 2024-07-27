@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server - Configure Local Server</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/configure.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Please Configure your Local Server</h2>
+        <div class="form-group">
+            <label for="serverUrl">Server URL:</label>
+            <input type="text" id="serverUrl" name="serverUrl" required>
+        </div>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="footer">
+            <button onclick="navigateBack()">Back</button>
+            <button onclick="checkConnection()">Check Connection</button>
+            <button id="next-button" disabled>Next</button>
+        </div>
+    </div>
+    <script>
+        async function checkConnection() {
+            const serverUrl = document.getElementById('serverUrl').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(serverUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+                if (data.token) {
+                    alert('Connection successful!');
+                    document.getElementById('next-button').disabled = false;
+
+                    const configData = { serverUrl, username, password };
+                    await window.electron.saveCredentials('localServerConfig.json', configData);
+
+                    window.localStorage.setItem('jwtToken', data.token);
+                    window.localStorage.setItem('serverUrl', serverUrl);
+                    window.localStorage.setItem('username', username);
+                    window.localStorage.setItem('password', password);
+                } else {
+                    alert('Connection failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Connection failed. Please check your credentials.');
+            }
+        }
+
+        function navigateBack() {
+            window.location.href = 'license.html';
+        }
+
+        function navigateNext() {
+            if (!document.getElementById('next-button').disabled) {
+                window.location.href = 'configure-sensors.html';
+            }
+        }
+
+        document.getElementById('next-button').addEventListener('click', navigateNext);
+    </script>
+</body>
+</html>

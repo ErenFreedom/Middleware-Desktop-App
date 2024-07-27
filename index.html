@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Middleware Server</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <img src="assets/images/logo.png" alt="Koncept Engineers">
+        </div>
+        <div class="right-section">
+            <div class="header">
+                <h1>Welcome to Middleware Server</h1>
+            </div>
+            <div class="content">
+                <p>Welcome to the Middleware Server installation wizard. This application will guide you through the setup process for the Middleware Server, ensuring a smooth and efficient installation experience.</p>
+                <p>Ensure you have all necessary details at hand for the configuration. Follow the instructions on each screen carefully to complete the setup.</p>
+                <p>If you encounter any issues, please refer to the user manual or contact our support team for assistance.</p>
+                <p><strong>System Versions:</strong></p>
+                <p>Electron version: <span id="electron-version"></span></p>
+                <p>Node version: <span id="node-version"></span></p>
+                <p>Chrome version: <span id="chrome-version"></span></p>
+            </div>
+            <div class="footer">
+                <button onclick="nextPage()">Next</button>
+                <button onclick="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('electron-version').innerText = process.versions.electron;
+        document.getElementById('node-version').innerText = process.versions.node;
+        document.getElementById('chrome-version').innerText = process.versions.chrome;
+
+        function nextPage() {
+            window.location.href = 'license.html';
+        }
+
+        function cancel() {
+            window.close();
+        }
+    </script>
+</body>
+</html>
