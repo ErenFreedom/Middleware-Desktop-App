@@ -92,12 +92,12 @@ jobs:
 
       - name: Set GTK environment variables
         run: |
-          echo "C:\\GTK\\bin" >> $Env:GITHUB_PATH
+          echo "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin" >> $Env:GITHUB_PATH
         shell: powershell
 
       - name: Verify GTK installation
         run: |
-          if (-Not (Test-Path -Path "C:\\GTK\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
+          if (-Not (Test-Path -Path "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
         shell: powershell
 
       - name: Install Node.js dependencies
