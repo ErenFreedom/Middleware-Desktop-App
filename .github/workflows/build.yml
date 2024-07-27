@@ -80,8 +80,8 @@ jobs:
 
       - name: Add MSYS2 to PATH
         run: |
-          echo "::add-path::C:\\tools\\msys64\\usr\\bin"
-          echo "::add-path::C:\\tools\\msys64\\mingw64\\bin"
+          echo "C:\\tools\\msys64\\usr\\bin" >> $Env:GITHUB_PATH
+          echo "C:\\tools\\msys64\\mingw64\\bin" >> $Env:GITHUB_PATH
         shell: powershell
 
       - name: Install MSYS2 packages
@@ -92,7 +92,7 @@ jobs:
 
       - name: Set GTK environment variables
         run: |
-          echo "::add-path::C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin"
+          echo "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin" >> $Env:GITHUB_PATH
         shell: powershell
 
       - name: Verify GTK installation
