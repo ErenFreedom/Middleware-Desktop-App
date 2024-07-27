@@ -75,11 +75,13 @@ jobs:
         shell: cmd
 
       - name: Install MSYS2 for additional dependencies
-        run: |
-          choco install msys2
-          echo "##[add-path]C:\\tools\\msys64\\usr\\bin"
-          echo "##[add-path]C:\\tools\\msys64\\mingw64\\bin"
+        run: choco install msys2
         shell: cmd
+
+      - name: Add MSYS2 to PATH
+        run: |
+          echo "C:\\tools\\msys64\\usr\\bin" >> $GITHUB_PATH
+          echo "C:\\tools\\msys64\\mingw64\\bin" >> $GITHUB_PATH
 
       - name: Install MSYS2 packages
         run: |
