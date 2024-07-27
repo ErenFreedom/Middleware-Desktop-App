@@ -80,7 +80,8 @@ jobs:
 
       - name: Add MSYS2 to PATH
         run: |
-          setx PATH "$Env:PATH;C:\tools\msys64\usr\bin;C:\tools\msys64\mingw64\bin"
+          echo "::add-path::C:\\tools\\msys64\\usr\\bin"
+          echo "::add-path::C:\\tools\\msys64\\mingw64\\bin"
         shell: powershell
 
       - name: Install MSYS2 packages
@@ -91,17 +92,17 @@ jobs:
 
       - name: Set GTK environment variables
         run: |
-          setx PATH "$Env:PATH;C:\Program Files (x86)\GTK2-Runtime Win64\bin"
+          echo "::add-path::C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin"
         shell: powershell
 
       - name: Verify GTK installation
         run: |
-          if (-Not (Test-Path -Path "C:\Program Files (x86)\GTK2-Runtime Win64\bin\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
+          if (-Not (Test-Path -Path "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
         shell: powershell
 
       - name: Debug GTK installation
         run: |
-          Get-ChildItem -Path "C:\Program Files (x86)\GTK2-Runtime Win64\bin"
+          Get-ChildItem -Path "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin"
         shell: powershell
 
       - name: Display PATH variable
