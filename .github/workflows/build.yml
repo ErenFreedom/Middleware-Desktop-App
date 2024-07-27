@@ -92,14 +92,7 @@ jobs:
 
       - name: Set GTK environment variables
         run: |
-          echo "C:\\tools\\gtk2-runtime" >> $Env:GITHUB_PATH
-          echo "C:\\tools\\gtk2-runtime\\bin" >> $Env:GITHUB_PATH
-          echo "C:\\tools\\gtk2-runtime\\lib" >> $Env:GITHUB_PATH
-        shell: powershell
-
-      - name: Debug GTK Installation
-        run: |
-          Get-ChildItem -Path "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin"
+          echo "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin" >> $Env:Path
         shell: powershell
 
       - name: Verify GTK installation
