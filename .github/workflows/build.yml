@@ -1,0 +1,89 @@
+name: Build Electron App
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies for canvas
+        run: sudo apt-get install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Build Electron App
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts-linux
+          path: |
+            build/*.deb
+            build/*.AppImage
+
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install GTK dependencies
+        run: |
+          choco install gtk-runtime
+          choco install python --version=3.8.0
+        shell: cmd
+
+      - name: Install MSYS2 for additional dependencies
+        run: |
+          choco install msys2
+          msys2 -c "pacman -Syu --noconfirm"
+          msys2 -c "pacman -S --noconfirm mingw-w64-x86_64-cairo mingw-w64-x86_64-pango mingw-w64-x86_64-gtk3"
+        shell: cmd
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Build Electron App
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts-windows
+          path: |
+            build/*.exe
+            build/*.msi
