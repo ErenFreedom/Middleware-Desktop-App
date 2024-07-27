@@ -80,8 +80,7 @@ jobs:
 
       - name: Add MSYS2 to PATH
         run: |
-          echo "C:\\tools\\msys64\\usr\\bin" >> $Env:GITHUB_PATH
-          echo "C:\\tools\\msys64\\mingw64\\bin" >> $Env:GITHUB_PATH
+          setx PATH "$Env:PATH;C:\tools\msys64\usr\bin;C:\tools\msys64\mingw64\bin"
         shell: powershell
 
       - name: Install MSYS2 packages
@@ -92,12 +91,12 @@ jobs:
 
       - name: Set GTK environment variables
         run: |
-          echo "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin" >> $Env:Path
+          setx PATH "$Env:PATH;C:\Program Files (x86)\GTK2-Runtime Win64\bin"
         shell: powershell
 
       - name: Verify GTK installation
         run: |
-          if (-Not (Test-Path -Path "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
+          if (-Not (Test-Path -Path "C:\Program Files (x86)\GTK2-Runtime Win64\bin\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
         shell: powershell
 
       - name: Install Node.js dependencies
