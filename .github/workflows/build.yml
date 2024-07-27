@@ -77,8 +77,14 @@ jobs:
       - name: Install MSYS2 for additional dependencies
         run: |
           choco install msys2
-          msys2 -c "pacman -Syu --noconfirm"
-          msys2 -c "pacman -S --noconfirm mingw-w64-x86_64-cairo mingw-w64-x86_64-pango mingw-w64-x86_64-gtk3"
+          echo "##[add-path]C:\\tools\\msys64\\usr\\bin"
+          echo "##[add-path]C:\\tools\\msys64\\mingw64\\bin"
+        shell: cmd
+
+      - name: Install MSYS2 packages
+        run: |
+          C:\tools\msys64\usr\bin\bash -lc "pacman -Syu --noconfirm"
+          C:\tools\msys64\usr\bin\bash -lc "pacman -S --noconfirm mingw-w64-x86_64-cairo mingw-w64-x86_64-pango mingw-w64-x86_64-gtk3"
         shell: cmd
 
       - name: Install Node.js dependencies
