@@ -108,7 +108,9 @@
                     setTimeout(() => {
                         statusBoxes[apiUrl].innerText = `Data successfully sent to cloud`;
                         setTimeout(() => {
-                            startTimer(apiUrl, sensorName); // Restart the timer after showing success message
+                            if (intervals[apiUrl]) {
+                                startTimer(apiUrl, sensorName); // Restart the timer only if fetching is still active
+                            }
                         }, 5000); // Display success message for 5 seconds
                     }, 1000);
                 }
