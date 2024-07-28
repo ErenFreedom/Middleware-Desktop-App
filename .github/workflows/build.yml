@@ -25,9 +25,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies for canvas
-        run: sudo apt-get install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
-
       - name: Install Node.js dependencies
         run: npm install
 
@@ -58,56 +55,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install GTK dependencies
-        run: choco install gtk-runtime
-        shell: cmd
-
-      - name: Check for existing Python installation
-        run: |
-          if (Get-Command python -ErrorAction SilentlyContinue) { Write-Output "Python is already installed"; exit 0 } else { exit 1 }
-        shell: powershell
-        continue-on-error: true
-
-      - name: Install Python if not already installed
-        if: failure()
-        run: choco install python --version=3.8.0
-        shell: cmd
-
-      - name: Install MSYS2 for additional dependencies
-        run: choco install msys2
-        shell: cmd
-
-      - name: Add MSYS2 to PATH
-        run: |
-          echo "C:\\tools\\msys64\\usr\\bin" | Out-File -FilePath $Env:GITHUB_PATH -Encoding utf8 -Append
-          echo "C:\\tools\\msys64\\mingw64\\bin" | Out-File -FilePath $Env:GITHUB_PATH -Encoding utf8 -Append
-        shell: powershell
-
-      - name: Install MSYS2 packages
-        run: |
-          C:\tools\msys64\usr\bin\bash -lc "pacman -Syu --noconfirm"
-          C:\tools\msys64\usr\bin\bash -lc "pacman -S --noconfirm mingw-w64-x86_64-cairo mingw-w64-x86_64-pango mingw-w64-x86_64-gtk3"
-        shell: cmd
-
-      - name: Set GTK environment variables
-        run: |
-          echo "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin" | Out-File -FilePath $Env:GITHUB_PATH -Encoding utf8 -Append
-        shell: powershell
-
-      - name: Verify GTK installation
-        run: |
-          if (-Not (Test-Path -Path "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
-        shell: powershell
-
-      - name: Debug GTK installation
-        run: |
-          Get-ChildItem -Path "C:\\Program Files (x86)\\GTK2-Runtime Win64\\bin"
-        shell: powershell
-
-      - name: Display PATH variable
-        run: echo $Env:PATH
-        shell: powershell
 
       - name: Install Node.js dependencies
         run: npm install
