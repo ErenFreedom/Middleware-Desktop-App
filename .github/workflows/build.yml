@@ -80,6 +80,15 @@ jobs:
           if (-Not (Test-Path -Path "C:\\tools\\msys64\\mingw64\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
         shell: powershell
 
+      - name: Debug GTK installation
+        run: |
+          Get-ChildItem -Path "C:\\tools\\msys64\\mingw64\\bin"
+        shell: powershell
+
+      - name: Display PATH variable
+        run: echo $Env:PATH
+        shell: powershell
+
       - name: Install Node.js dependencies
         run: npm install
 
