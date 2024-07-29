@@ -17,29 +17,44 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+          node-version: '18.x'
 
-      - name: Build Docker image
-        run: |
-          docker build . -t electron-app-builder:latest
+      - name: Install MSYS2 for additional dependencies
+        run: choco install msys2
+        shell: cmd
 
-      - name: Create and extract artifact
+      - name: Add MSYS2 to PATH
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}/build:/app/build \
-            electron-app-builder:latest
+          echo "C:\\tools\\msys64\\usr\\bin" | Out-File -FilePath $Env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\\tools\\msys64\\mingw64\\bin" | Out-File -FilePath $Env:GITHUB_PATH -Encoding utf8 -Append
+        shell: powershell
+
+      - name: Install GTK3 dependencies using MSYS2
+        run: |
+          C:\tools\msys64\usr\bin\bash -lc "pacman -Syu --noconfirm"
+          C:\tools\msys64\usr\bin\bash -lc "pacman -S --noconfirm mingw-w64-x86_64-cairo mingw-w64-x86_64-pango mingw-w64-x86_64-gtk3"
+        shell: cmd
+
+      - name: Verify GTK installation
+        run: |
+          if (-Not (Test-Path -Path "C:\\tools\\msys64\\mingw64\\bin\\libcairo-2.dll")) { Write-Error "GTK installation failed"; exit 1 } else { Write-Output "GTK installation verified" }
+        shell: powershell
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Build Electron App
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build-artifacts
-          path: build/
+          name: build-artifacts-windows
+          path: |
+            build/*.exe
+            build/*.msi
