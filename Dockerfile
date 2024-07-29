@@ -25,6 +25,9 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Ensure electron-builder is available globally
+RUN npm install -g electron-builder
+
 # Run the build command
 RUN npm run build
 
