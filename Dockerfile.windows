@@ -2,11 +2,13 @@
 FROM mcr.microsoft.com/windows/servercore:ltsc2019
 
 # Install Chocolatey
-RUN powershell -NoProfile -ExecutionPolicy Bypass -Command "Set-ExecutionPolicy RemoteSigned; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
+SHELL ["powershell", "-Command"]
+RUN Set-ExecutionPolicy RemoteSigned -Scope Process; \
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 # Install Node.js, MSYS2, and required GTK dependencies
 RUN choco install -y nodejs-lts msys2
-RUN refreshenv
 RUN C:\tools\msys64\usr\bin\bash -lc "pacman -Syu --noconfirm"
 RUN C:\tools\msys64\usr\bin\bash -lc "pacman -S --noconfirm mingw-w64-x86_64-cairo mingw-w64-x86_64-pango mingw-w64-x86_64-gtk3"
 
