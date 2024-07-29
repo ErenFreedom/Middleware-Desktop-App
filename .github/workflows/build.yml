@@ -26,9 +26,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         run: |
-          docker build -t my-electron-app:windows -f Dockerfile.windows .
+          docker build --platform windows/amd64 -t my-electron-app:windows -f Dockerfile.windows .
+
+      - name: Run Docker container
+        run: |
           docker run --rm my-electron-app:windows
 
       - name: Upload Artifacts
