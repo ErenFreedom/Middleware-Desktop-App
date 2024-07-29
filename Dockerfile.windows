@@ -1,5 +1,5 @@
 # Use a base Windows image with Node.js installed
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
 # Install Chocolatey
 SHELL ["powershell", "-Command"]
